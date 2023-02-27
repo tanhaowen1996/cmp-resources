@@ -10,8 +10,6 @@ python-dotenv
 requests
 uvicorn
 uvloop
-openstacksdk
-python-keystoneclient
 pyvmomi
 APScheduler
 
