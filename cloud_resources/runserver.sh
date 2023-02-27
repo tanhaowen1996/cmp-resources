@@ -9,7 +9,7 @@ WEB_CONCURRENCY=${WEB_CONCURRENCY:=3}
 MAX_REQUESTS=${MAX_REQUESTS:=5000}
 
 if [ "asgi" = "$SERVICE_MODE" ]; then
-    gunicorn cmp_storage.asgi -b :$WEB_PORT -k uvicorn.workers.UvicornWorker -w $WEB_CONCURRENCY --max-requests $MAX_REQUESTS
+    gunicorn cloud_resources.asgi -b :$WEB_PORT -k uvicorn.workers.UvicornWorker -w $WEB_CONCURRENCY --max-requests $MAX_REQUESTS
 elif [ "django" = "$SERVICE_MODE" ]; then
     ./manage.py runserver 0.0.0.0:$WEB_PORT
 else
