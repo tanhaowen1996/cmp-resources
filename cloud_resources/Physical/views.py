@@ -10,7 +10,6 @@ logger = logging.getLogger(__package__)
 from sync.syncAll import scheduler
 
 
-
 class HostViewSet(viewsets.ModelViewSet):
     """
     list:
