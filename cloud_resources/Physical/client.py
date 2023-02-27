@@ -15,10 +15,10 @@ def show_host(host_view):
     vnic_list = []
     for vnic in config.network.vnic:
         vnic_list.append({
-            "ip": vnic.spec.ip.ipAddress,
-            "subMask": vnic.spec.ip.subnetMask,
-            "mac": vnic.spec.mac,
-            "mtu": vnic.spec.mtu,
+            "ip": vnic.spec.ip.ipAddress if vnic.spec.ip else "",
+            "subMask": vnic.spec.ip.subnetMask if vnic.spec.ip else "",
+            "mac": vnic.spec.mac if vnic.spec.mac else "",
+            "mtu": vnic.spec.mtu if vnic.spec.mtu else "",
             "gateway": vnic.spec.ipRouteSpec.ipRouteConfig.defaultGateway if vnic.spec.ipRouteSpec else "",
         })
     tags = []
