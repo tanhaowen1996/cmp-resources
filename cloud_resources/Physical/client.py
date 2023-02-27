@@ -23,19 +23,24 @@ def show_host(host_view):
     tags = []
     for tag in host_view.tag:
         tags.append(tag)
-
+    idc = ""
     if summary.managementServerIp == "10.210.1.254":
+        idc = "新仓科机房"
         tags.append("新仓科机房")
     if summary.managementServerIp == "10.208.1.254":
+        idc = "马尾机房"
         tags.append("马尾机房")
     if summary.managementServerIp == "10.0.115.239":
+        idc = "老仓科机房"
         tags.append("老仓科机房")
     if summary.managementServerIp == "10.209.1.254":
+        idc = "测试环境"
         tags.append("测试环境")
     host = {
         'uuid': summary.hardware.uuid,
         'name': host_view.name if host_view.name else '',
         'ipaddress': host_view.name if host_view.name else '',
+        'idc': idc,
         'managementServerIp': summary.managementServerIp if summary.managementServerIp else '',
         'cluster': host_view.parent.name if host_view.parent.name else '',
         'vnic': vnic_list,
