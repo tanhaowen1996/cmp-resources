@@ -100,8 +100,6 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'resource'),
         'USER': os.getenv('DB_USER', 'resource'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'resource'),
-        # 'PASSWORD': os.getenv('DB_PASSWORD', '4da5fe522058ca244f93257c452f9e9ce27482ab'),
-        # 'HOST': os.getenv('DB_HOST', '10.208.0.46'),
         'HOST': os.getenv('DB_HOST', '10.208.224.79'),
         'PORT': int(os.getenv('DB_PORT', 5432)),
         'CONN_MAX_AGE': 3
@@ -149,6 +147,8 @@ DATE_FORMAT = 'Y-m-d'
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
