@@ -3,6 +3,7 @@ from cloud_resources.settings import ONEFS_URL, NFS_ROOT, VSPHERE
 from urllib3.exceptions import InsecureRequestWarning
 from pyVim import connect
 from pyVmomi import vim
+import json
 import urllib3
 
 urllib3.disable_warnings(InsecureRequestWarning)
@@ -91,7 +92,7 @@ def get_hosts(host, user, pwd, port):
 
 def get_vsphere():
     vsphere_list = []
-    for vsphere in VSPHERE:
+    for vsphere in json.loads(VSPHERE):
         vSphere = {
             'user': vsphere.split(' ')[0],
             'pwd': vsphere.split(' ')[1],
