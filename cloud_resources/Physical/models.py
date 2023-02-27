@@ -28,6 +28,17 @@ class Host(models.Model):
         null=True,
         blank=True,
     )
+    region = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+        default="福州"
+    )
+    idc = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+    )
     managementServerIp = models.CharField(
         max_length=64,
         null=True,
