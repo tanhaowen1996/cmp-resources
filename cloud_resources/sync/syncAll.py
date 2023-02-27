@@ -44,7 +44,7 @@ def sync_vserver():
                       verify=False)
 
 
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler(timezone="Asia/Shanghai")
 
 scheduler.add_job(sync_host, 'cron', month='*', day='*', hour=23, minute=30, second=00)
 scheduler.add_job(sync_vserver, 'cron', month='*', day='*', hour=23, minute=59, second=00)
