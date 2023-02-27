@@ -216,7 +216,7 @@ def get_servers(host, user, pwd, port):
 
 def get_vsphere():
     vsphere_list = []
-    for vsphere in VSPHERE:
+    for vsphere in json.loads(VSPHERE):
         vSphere = {
             'user': vsphere.split(' ')[0],
             'pwd': vsphere.split(' ')[1],
