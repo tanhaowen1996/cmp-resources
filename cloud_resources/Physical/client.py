@@ -19,7 +19,7 @@ def show_host(host_view):
             "subMask": vnic.spec.ip.subnetMask,
             "mac": vnic.spec.mac,
             "mtu": vnic.spec.mtu,
-            "gateway": vnic.spec.ipRouteSpec.ipRouteConfig.defaultGateway,
+            "gateway": vnic.spec.ipRouteSpec.ipRouteConfig.defaultGateway if vnic.spec.ipRouteSpec else "",
         })
     tags = []
     for tag in host_view.tag:
