@@ -1,7 +1,6 @@
 from requests import exceptions
 from cloud_resources.settings import ONEFS_URL, NFS_ROOT, VSPHERE
 from .session import OneFSMixin
-from cloud_resources.utils import OpenstackMixin
 from urllib3.exceptions import InsecureRequestWarning
 from pyVim import connect
 from pyVmomi import vim
@@ -12,7 +11,6 @@ import urllib3
 
 
 nfs_conn = OneFSMixin.get_session()
-os_conn = OpenstackMixin.get_conn()
 urllib3.disable_warnings(InsecureRequestWarning)
 
 
