@@ -92,6 +92,7 @@ class VServerViewSet(viewsets.ModelViewSet):
                     vs.delete()
                 for vm_list in vserver_list:
                     for vSphere in vm_list:
+                        print(vSphere)
                         serializer = self.get_serializer(data=vSphere)
                         serializer.is_valid(raise_exception=True)
                         serializer.save()
