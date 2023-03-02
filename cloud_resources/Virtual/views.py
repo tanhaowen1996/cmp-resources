@@ -84,16 +84,17 @@ class VServerViewSet(viewsets.ModelViewSet):
             vsphere_list = get_vsphere()
             for vsphere in vsphere_list:
                 vserver_list = get_servers(host=vsphere.get('host'),
-                                                     user=vsphere.get('user'),
-                                                     pwd=vsphere.get('pwd'),
-                                                     port=vsphere.get('port'))
+                                           user=vsphere.get('user'),
+                                           pwd=vsphere.get('pwd'),
+                                           port=vsphere.get('port'))
                 vs_delete = VServer.objects.filter(vSphereHost=vsphere.get('host'))
                 for vs in vs_delete:
                     vs.delete()
-                for vSphere in vserver_list:
-                    serializer = self.get_serializer(data=vSphere)
-                    serializer.is_valid(raise_exception=True)
-                    serializer.save()
+                for vm_list in vserver_list:
+                    for vSphere in vm_list:
+                        serializer = self.get_serializer(data=vSphere)
+                        serializer.is_valid(raise_exception=True)
+                        serializer.save()
         except Exception as e:
             return Response(e, status=status.HTTP_404_NOT_FOUND)
         else:
@@ -103,17 +104,18 @@ class VServerViewSet(viewsets.ModelViewSet):
     def sync(self, request, *args, **kwargs):
         try:
             vserver_list = get_servers(host=request.data.get('host'),
-                                                 user=request.data.get('user'),
-                                                 pwd=request.data.get('pwd'),
-                                                 port=request.data.get('port'))
-
+                                       user=request.data.get('user'),
+                                       pwd=request.data.get('pwd'),
+                                       port=request.data.get('port'))
             vs_delete = VServer.objects.filter(vSphereHost=request.data.get('host'))
             for vs in vs_delete:
                 vs.delete()
-            for vSphere in vserver_list:
-                serializer = self.get_serializer(data=vSphere)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+            for vm_list in vserver_list:
+                for vSphere in vm_list:
+                    print(vSphere)
+                    serializer = self.get_serializer(data=vSphere)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
         except Exception as e:
             return Response(e, status=status.HTTP_404_NOT_FOUND)
         else:
