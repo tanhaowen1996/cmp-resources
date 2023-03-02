@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.indexes import BrinIndex
 from django.utils.translation import gettext_lazy as _
 from Physical import client as physical_client
+import uuid
 
 
 def get_vsphere():
@@ -13,10 +14,16 @@ def get_hosts(host, user, pwd, port):
 
 
 class Host(models.Model):
-    uuid = models.CharField(
+    id = models.UUIDField(
         primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    uuid = models.CharField(
         max_length=64,
-        verbose_name=_('Host uuid')
+        verbose_name=_('Host uuid'),
+        null=True,
+        blank=True,
     )
     name = models.CharField(
         max_length=128,
