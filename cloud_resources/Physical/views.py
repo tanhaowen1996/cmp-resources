@@ -44,6 +44,7 @@ class HostViewSet(viewsets.ModelViewSet):
                 for host in Host_delete:
                     host.delete()
                 for host in host_list:
+                    print(host)
                     serializer = self.get_serializer(data=host)
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
