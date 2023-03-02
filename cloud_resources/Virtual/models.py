@@ -2,8 +2,16 @@ from django.db import models
 from django.contrib.postgres.indexes import BrinIndex
 from django.utils.translation import gettext_lazy as _
 from Virtual import client as virtual_client
+import uuid
+import logging
+
+LOG = logging.getLogger(__name__)
 
 # Create your models here.
+
+
+class SyncPass(Exception):
+    pass
 
 
 def get_nfs():
@@ -52,10 +60,16 @@ def get_servers(host, user, pwd, port):
 
 
 class VServer(models.Model):
-    id = models.CharField(
+    id = models.UUIDField(
         primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    uuid = models.CharField(
         max_length=64,
-        verbose_name=_('vServer id')
+        verbose_name=_('vServer id'),
+        null=True,
+        blank=True
     )
     project_id = models.CharField(
         max_length=64,
@@ -68,7 +82,7 @@ class VServer(models.Model):
         blank=True
     )
     name = models.CharField(
-        max_length=64,
+        max_length=128,
         null=True,
         blank=True
     )
@@ -98,7 +112,7 @@ class VServer(models.Model):
         blank=True
     )
     os = models.CharField(
-        max_length=64,
+        max_length=128,
         null=True,
         blank=True
     )
@@ -141,12 +155,12 @@ class VServer(models.Model):
         blank=True
     )
     location = models.CharField(
-        max_length=32,
+        max_length=64,
         null=True,
         blank=True
     )
     vSphereHost = models.CharField(
-        max_length=32,
+        max_length=64,
         null=True,
         blank=True
     )
