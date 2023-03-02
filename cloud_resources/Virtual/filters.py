@@ -15,6 +15,7 @@ class NfsFilter(FilterSet):
 
 class VServerFilter(FilterSet):
     id = CharFilter(field_name='id', lookup_expr='icontains')
+    uuid = CharFilter(field_name='id', lookup_expr='icontains')
     project_id = CharFilter(field_name='project_id', lookup_expr='icontains')
     name = CharFilter(field_name='name', lookup_expr='icontains')
     hostName = CharFilter(field_name='hostName', lookup_expr='icontains')
@@ -29,6 +30,7 @@ class VServerFilter(FilterSet):
     class Meta:
         mode = VServer
         filter = ('name', 'id',
+                  'uuid',
                   'project_id',
                   'hostName',
                   'host',
