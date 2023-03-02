@@ -148,7 +148,7 @@ def show_vm(host, vm, dcName, project_id=""):
         summary = vm.summary
         tags = []
         for t in vm.tag:
-            tags.append(t.name)
+            tags.append(t.key)
         if dcName == "CKDC":
             tags.append("新仓科机房")
         if dcName == "MWDC":
