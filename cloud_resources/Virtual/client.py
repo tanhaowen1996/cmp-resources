@@ -3,12 +3,11 @@ from cloud_resources.settings import ONEFS_URL, NFS_ROOT, VSPHERE
 from .session import OneFSMixin
 from urllib3.exceptions import InsecureRequestWarning
 from pyVim import connect
-from pyVmomi import vim
+from pyVmomi import vim, vmodl
 from pyVim.task import WaitForTask
 import requests
 import json
 import urllib3
-
 
 nfs_conn = OneFSMixin.get_session()
 urllib3.disable_warnings(InsecureRequestWarning)
@@ -116,9 +115,9 @@ def _split_project_id(project_dir_name):
     return: "3eadf579dcb04c7d980ecb235ea439ac"
     """
     try:
-      return project_dir_name.split('(')[1].split(')')[0]
+        return project_dir_name.split('(')[1].split(')')[0]
     except Exception as e:
-      raise Exception("split project_dir: %s failed: %s" % (project_dir_name, e))
+        raise Exception("split project_dir: %s failed: %s" % (project_dir_name, e))
 
 
 def _split_vm_name_uuid(vm_dir_name):
@@ -127,10 +126,13 @@ def _split_vm_name_uuid(vm_dir_name):
     return: ("asdfghjk", "8429558a-4606-48b7-80c4-982e59b82c1d")
     """
     try:
-      arr = vm_dir_name.split('(')
-      return arr[0].strip(), arr[1].split(')')[0]
+        return vm_dir_name[:-39], vm_dir_name[-37:-1]
+        # arr = vm_dir_name.split('(')
+        # if len(arr) == 3:
+        #     return arr[0].strip() + '(' + arr[1].strip(), arr[2].strip().split(')')[0]
+        # return arr[0].strip(), arr[1].split(')')[0]
     except Exception as e:
-      raise Exception("split vm_dir: %s failed: %s" % (vm_dir_name, e))
+        raise Exception("split vm_dir: %s failed: %s" % (vm_dir_name, e))
 
 
 def show_vm(host, vm, dcName, project_id=""):
@@ -140,7 +142,6 @@ def show_vm(host, vm, dcName, project_id=""):
         location = "underlay"
         vm_name = vm.name
         vm_uuid = vm.summary.config.instanceUuid
-        print(vm.name)
         if project_id:
             location = "overlay"
             vm_name, vm_uuid = _split_vm_name_uuid(vm.name)
@@ -157,18 +158,18 @@ def show_vm(host, vm, dcName, project_id=""):
 
         vm_info = {
             "project_id": project_id,
-            "id": vm_uuid,
-            "guest_uuid": summary.config.uuid,
+            "uuid": vm_uuid,
+            "guest_uuid": summary.config.uuid if summary.config.uuid else "",
             "name": vm_name,
-            "hostName": summary.guest.hostName,
-            "host": summary.runtime.host.name,
-            "cluster": summary.runtime.host.parent.name,
-            "powerState": summary.runtime.powerState,
+            "hostName": summary.guest.hostName if summary.guest.hostName else "",
+            "host": summary.runtime.host.name if summary.runtime.host.name else "",
+            "cluster": summary.runtime.host.parent.name if summary.runtime.host.parent.name else "",
+            "powerState": summary.runtime.powerState if summary.runtime.powerState else "",
             "ipAddress": vm.guest.ipAddress if vm.guest.ipAddress else "",
             "os": vm.guest.guestFullName if vm.guest.guestFullName else "",
             "osGuestId": vm.guest.guestId if vm.guest.guestId else "",
-            "vCPU": summary.config.numCpu,
-            "vMemoryMB": summary.config.memorySizeMB,
+            "vCPU": summary.config.numCpu if summary.config.numCpu else 0,
+            "vMemoryMB": summary.config.memorySizeMB if summary.config.numCpu else 0,
             "MemoryUsage": '{:.2%}'.format(
                 float(summary.quickStats.guestMemoryUsage) / float(summary.config.memorySizeMB)),
             "cpuUsage": 0 if summary.quickStats.overallCpuUsage == 0 else '{:.2%}'.format(
@@ -188,30 +189,37 @@ def show_vm(host, vm, dcName, project_id=""):
 
 
 def get_servers(host, user, pwd, port):
-    vm_ins = connect.SmartConnect(host=host, user=user, pwd=pwd, port=port, disableSslCertValidation=True)
-    content = vm_ins.RetrieveContent()
-    container = content.rootFolder
-    vm_type = [vim.VirtualMachine]
-    recursive = True
-    containerView = content.viewManager.CreateContainerView(container, vm_type, recursive)
-    dc = content.viewManager.CreateContainerView(container, [vim.Datacenter], recursive).view[0]
-    osfolder = get_obj(content, [vim.Folder], "OpenStack", dc.vmFolder)
-    osvm = []
-    vm_list = []
-    dcName = dc.name
-    for prject_folder in osfolder.childEntity:
-        project_id = _split_project_id(prject_folder.name)
-        os_vms_folder = get_obj(content, [vim.Folder], "Instances", prject_folder)
-        os_volume_folder = get_obj(content, [vim.Folder], "Volumes", prject_folder)
-        osvm.extend(os_vms_folder.childEntity)
-        osvm.extend(os_volume_folder.childEntity)
-        for vm in os_vms_folder.childEntity:
-            vm_list.append(show_vm(host, vm, dcName, project_id))
-    for vm in containerView.view:
-        if vm in osvm:
-            continue
-        vm_list.append(show_vm(host=host, vm=vm, dcName=dcName))
-    return vm_list
+    try:
+        vm_ins = connect.SmartConnect(host=host, user=user, pwd=pwd, port=port, disableSslCertValidation=True)
+        content = vm_ins.RetrieveContent()
+        container = content.rootFolder
+        vm_type = [vim.VirtualMachine]
+        recursive = True
+        containerView = content.viewManager.CreateContainerView(container, vm_type, recursive)
+        dc = content.viewManager.CreateContainerView(container, [vim.Datacenter], recursive).view[0]
+        osfolder = get_obj(content, [vim.Folder], "OpenStack", dc.vmFolder)
+        osvm = []
+        dcName = dc.name
+        for prject_folder in osfolder.childEntity:
+            vm_list = []
+            project_id = _split_project_id(prject_folder.name)
+            os_vms_folder = get_obj(content, [vim.Folder], "Instances", prject_folder)
+            os_volume_folder = get_obj(content, [vim.Folder], "Volumes", prject_folder)
+            osvm.extend(os_vms_folder.childEntity)
+            osvm.extend(os_volume_folder.childEntity)
+            for vm in os_vms_folder.childEntity:
+                vm_list.append(show_vm(host, vm, dcName, project_id))
+                print(vm.summary.config.instanceUuid)
+            yield vm_list
+        vm_list = []
+        for vm in containerView.view:
+            if vm in osvm:
+                continue
+            print(vm.summary.config.instanceUuid)
+            vm_list.append(show_vm(host=host, vm=vm, dcName=dcName))
+        yield vm_list
+    except vmodl.MethodFault as error:
+        print("Caught vmodl fault : " + error.msg)
 
 
 def get_vsphere():
