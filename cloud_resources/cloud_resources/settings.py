@@ -162,11 +162,13 @@ ONEFS_PASSWORD = os.getenv('ONEFS_PASSWORD', 'admin')
 NFS_ROOT = os.getenv('NEF_ROOT', '/ifs/')
 NFS_IP = os.getenv('NFS_IP', 'nasfz.yonghui.cn')
 # vsphere list ['USER PASSWORD HOST PORT']
-VSPHERE = os.getenv('VSPHERE', ['yhcmp@yhcmpvc7-dev.local m#ss9ttm2E 10.209.1.254 443'])
+VSPHERE = os.getenv('VSPHERE', ["yhcmp@yhcmpvc7-dev.local m#ss9ttm2E 10.209.1.254 443"])
 WEBHOOK_URL = os.getenv('WEBHOOK_URL', 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=84889afd-ea6a-49fb-b922-72cc10e99629')
 
-
+SYNC_URL = os.getenv('SYNC_URL', '10.209.0.170:8880')
 SWAGGER = bool(int(os.getenv('SWAGGER', 1)))
+SYNC_HOST_TIME = os.getenv('SYNC_HOST_TIME', '23:30:00')
+SYNC_VSERVER_TIME = os.getenv('SYNC_VSERVER_TIME', '23:59:00')
 
 # if SWAGGER:
 #     SWAGGER_SETTINGS = {
