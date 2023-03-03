@@ -45,8 +45,7 @@ def sync_vserver():
 
 
 scheduler = BackgroundScheduler(timezone="Asia/Shanghai")
-import pdb
-pdb.set_trace()
+
 scheduler.add_job(sync_host, 'cron', month='*', day='*', hour=int(SYNC_HOST_TIME.split(':')[0]), minute=int(SYNC_HOST_TIME.split(':')[1]), second=int(SYNC_HOST_TIME.split(':')[2]))
 scheduler.add_job(sync_vserver, 'cron', month='*', day='*', hour=int(SYNC_VSERVER_TIME.split(':')[0]), minute=int(SYNC_VSERVER_TIME.split(':')[1]), second=int(SYNC_VSERVER_TIME.split(':')[2]))
 
