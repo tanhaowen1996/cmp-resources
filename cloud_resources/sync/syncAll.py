@@ -1,12 +1,12 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from cloud_resources.settings import WEBHOOK_URL
+from cloud_resources.settings import WEBHOOK_URL, SYNC_URL, SYNC_HOST_TIME, SYNC_VSERVER_TIME
 import requests
 import json
 
 
 def sync_host():
     print("start sync host")
-    url = "http://localhost:8880/v2/host/sync_all"
+    url = "http://{sync_url}/v2/host/sync_all".format(sync_url=SYNC_URL)
     payload = {}
     headers = {}
     try:
@@ -26,7 +26,7 @@ def sync_host():
 
 def sync_vserver():
     print("start sync vserver")
-    url = "http://localhost:8880/v2/vserver/sync_all"
+    url = "http://{sync_url}/v2/vserver/sync_all".format(sync_url=SYNC_URL)
     payload = {}
     headers = {}
     try:
@@ -45,8 +45,9 @@ def sync_vserver():
 
 
 scheduler = BackgroundScheduler(timezone="Asia/Shanghai")
-
-scheduler.add_job(sync_host, 'cron', month='*', day='*', hour=23, minute=30, second=00)
-scheduler.add_job(sync_vserver, 'cron', month='*', day='*', hour=23, minute=59, second=00)
+import pdb
+pdb.set_trace()
+scheduler.add_job(sync_host, 'cron', month='*', day='*', hour=int(SYNC_HOST_TIME.split(':')[0]), minute=int(SYNC_HOST_TIME.split(':')[1]), second=int(SYNC_HOST_TIME.split(':')[2]))
+scheduler.add_job(sync_vserver, 'cron', month='*', day='*', hour=int(SYNC_VSERVER_TIME.split(':')[0]), minute=int(SYNC_VSERVER_TIME.split(':')[1]), second=int(SYNC_VSERVER_TIME.split(':')[2]))
 
 scheduler.start()
