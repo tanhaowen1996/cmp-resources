@@ -21,12 +21,13 @@ from rest_framework.routers import SimpleRouter
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from Virtual.views import NfsViewSet, VServerViewSet
+from Virtual.views import NfsViewSet, VServerViewSet, VolumeViewSet
 from Physical.views import HostViewSet
 
 router = SimpleRouter(trailing_slash=False)
 router.register(r'nfs', NfsViewSet, basename='NFS')
 router.register(r'vserver', VServerViewSet, basename='VServer')
+router.register(r'volume', VolumeViewSet, basename='Volume')
 router.register(r'host', HostViewSet, basename='Host')
 
 urlpatterns = [
