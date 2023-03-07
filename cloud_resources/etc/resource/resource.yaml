@@ -1,0 +1,8 @@
+clouds:
+  - auth_url: http://10.209.0.10:35357/v3
+    region: dev01_ck
+    project_name: admin
+    username: admin
+    password: NY4E6Tz6SfuKBztPppBik1GXTqY7m3M3FDpsL2nK
+    user_domain: Default
+    project_domain: Default
