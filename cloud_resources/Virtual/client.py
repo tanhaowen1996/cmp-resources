@@ -231,8 +231,6 @@ def show_volume(volume, os_conn):
     os_server = ''
     if volume.attachments:
         os_server = get_os_server(os_conn=os_conn, server_id=volume.attachments[0].get('server_id'))
-    import pdb
-    pdb.set_trace()
     Volume = {
         'uuid': volume.id,
         'status': volume.status,
