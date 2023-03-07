@@ -231,6 +231,8 @@ def show_volume(volume, os_conn):
     os_server = ''
     if volume.attachments:
         os_server = get_os_server(os_conn=os_conn, server_id=volume.attachments[0].get('server_id'))
+    import pdb
+    pdb.set_trace()
     Volume = {
         'uuid': volume.id,
         'status': volume.status,
@@ -262,7 +264,7 @@ def get_vsphere():
 
 def get_volumes(os_conn):
     volumes = []
-    for volume in os_conn.list_volumes(all_tenants=True):
+    for volume in os_conn.block_storage.volumes(all_projects=True):
         volumes.append(show_volume(volume=volume, os_conn=os_conn))
     return volumes
 
