@@ -224,12 +224,13 @@ def get_servers(host, user, pwd, port):
 
 
 def get_os_server(os_conn, server_id):
-    return os_conn.get_server(server_id)
+    return os_conn.get_server(name_or_id=server_id, all_projects=True)
 
 
 def show_volume(volume, os_conn):
-
-    os_server = get_os_server(os_conn=os_conn, server_id=volume.attachments[0].get('server_id'))
+    os_server = ''
+    if volume.attachments:
+        os_server = get_os_server(os_conn=os_conn, server_id=volume.attachments[0].get('server_id'))
     Volume = {
         'uuid': volume.id,
         'status': volume.status,
@@ -241,7 +242,7 @@ def show_volume(volume, os_conn):
         'attachments': volume.attachments[0] if volume.attachments else '',
         'host': volume.host,
         'region': volume.location.region_name,
-        'server_ip': os_server.access_ipv4 if volume.attachments else '',
+        'server_ip': os_server.access_ipv4 if os_server else '',
     }
     return Volume
 
@@ -261,7 +262,7 @@ def get_vsphere():
 
 def get_volumes(os_conn):
     volumes = []
-    for volume in os_conn.list_volumes():
+    for volume in os_conn.list_volumes(all_tenants=True):
         volumes.append(show_volume(volume=volume, os_conn=os_conn))
     return volumes
 
