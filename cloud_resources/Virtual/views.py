@@ -1,9 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .serializers import NfsSerializer, VServerSerializer
-from .models import Nfs, VServer, get_vsphere, get_servers, get_nfs
-from .filters import NfsFilter, VServerFilter
+from .serializers import NfsSerializer, VServerSerializer, VolumeSerializer
+from .models import Nfs, VServer, get_vsphere, get_servers, get_nfs, get_clouds, get_volumes
+from .filters import NfsFilter, VServerFilter, VolumeFilter
+from .session import create_connection
 import logging
 
 logger = logging.getLogger(__package__)
@@ -117,6 +118,47 @@ class VServerViewSet(viewsets.ModelViewSet):
                     serializer = self.get_serializer(data=vSphere)
                     serializer.is_valid(raise_exception=True)
                     serializer.save()
+        except Exception as e:
+            return Response(e, status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response("同步完成", status=status.HTTP_200_OK)
+
+
+class VolumeViewSet(viewsets.ModelViewSet):
+    """
+        list:
+        Get Volume list
+
+        create:
+        Create Volume
+
+        retrieve:
+        Get Volume
+
+        destroy:
+        drop Volume
+    """
+    filterset_class = VServerFilter
+    serializer_class = VolumeFilter
+    queryset = VServer.objects.all().order_by('-created_at')
+
+    def get_serializer_class(self):
+        return VolumeSerializer
+
+    @action(detail=False, methods=['get'])
+    def sync_all(self, request, *args, **kwargs):
+        try:
+            clouds = get_clouds()
+            for cloud in clouds:
+                os_conn = create_connection(auth_url=cloud.get('auth_url'),
+                                            region=cloud.get('region'),
+                                            project_name=cloud.get('project_name'),
+                                            username=cloud.get('username'),
+                                            password=cloud.get('password'),
+                                            user_domain=cloud.get('user_domain'),
+                                            project_domain=cloud.get('project_domain'))
+                volumes = get_volumes(os_conn=os_conn)
+
         except Exception as e:
             return Response(e, status=status.HTTP_404_NOT_FOUND)
         else:
