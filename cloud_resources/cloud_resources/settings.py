@@ -71,6 +71,7 @@ ROOT_URLCONF = 'cloud_resources.urls'
 HEALTH_CHECK_PATH = os.getenv('HEALTH_CHECK_PATH', '/health')
 URL = os.getenv("URL", "127.0.0.1:8080")
 WEB_PORT = os.getenv("WEB_PORT", 8080)
+CLOUD_PATH = os.getenv('CLOUD_PATH', '/etc/resource/resource.yaml')
 
 TEMPLATES = [
     {
