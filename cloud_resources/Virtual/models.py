@@ -7,6 +7,7 @@ import logging
 
 LOG = logging.getLogger(__name__)
 
+
 # Create your models here.
 
 
@@ -175,38 +176,77 @@ class VServer(models.Model):
         indexes = (BrinIndex(fields=['updated_at', 'created_at']),)
 
 
+def get_clouds():
+    return virtual_client.get_clouds()
+
+
+def get_volumes(os_conn):
+    return virtual_client.get_volumes(os_conn)
+
+
 class Volume(models.Model):
-    id = models.CharField(
+    id = models.UUIDField(
         primary_key=True,
+        default=uuid.uuid4,
+        editable=False
+    )
+    uuid = models.CharField(
         max_length=32,
-        verbose_name=_('volume id')
+        verbose_name=_('volume id'),
+        null=True,
+        blank=True
     )
     size = models.FloatField(
-        null=True
+        null=True,
+        blank=True
     )
     status = models.CharField(
         max_length=32,
+        null=True,
+        blank=True
     )
-    project_id = models.CharField(
-        max_length=32,
-    )
-    project_name = models.CharField(
-        max_length=64,
+    creats_time = models.DateTimeField(
+        null=True,
+        blank=True
     )
     host = models.CharField(
         max_length=64,
+        null=True,
+        blank=True
+    )
+    name = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True
+    )
+    user_id = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True
+    )
+    region = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True
+    )
+    server_ip = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True
     )
     volume_type = models.CharField(
         max_length=32,
+        null=True,
+        blank=True
     )
-    tag = models.JSONField(
+    attachments = models.JSONField(
         max_length=720,
+        null=True,
+        blank=True
     )
-    attachments = models.CharField(
-        max_length=256,
-    )
-    bootable = models.BooleanField(
-        null=True
+    is_bootable = models.BooleanField(
+        null=True,
+        blank=True
     )
     updated_at = models.DateTimeField(
         auto_now=True,
@@ -217,4 +257,3 @@ class Volume(models.Model):
 
     class Meta:
         indexes = (BrinIndex(fields=['updated_at', 'created_at']),)
-
