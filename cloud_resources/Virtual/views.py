@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import NfsSerializer, VServerSerializer, VolumeSerializer
-from .models import Nfs, VServer, get_vsphere, get_servers, get_nfs, get_clouds, get_volumes
+from .models import Nfs, VServer, Volume, get_vsphere, get_servers, get_nfs, get_clouds, get_volumes
 from .filters import NfsFilter, VServerFilter, VolumeFilter
 from .session import create_connection
 import logging
@@ -158,6 +158,14 @@ class VolumeViewSet(viewsets.ModelViewSet):
                                             user_domain=cloud.get('user_domain'),
                                             project_domain=cloud.get('project_domain'))
                 volumes = get_volumes(os_conn=os_conn)
+                volumes_delete = Volume.objects.filter(region=cloud.get('region'))
+                for volume in volumes_delete:
+                    volume.delete()
+                for volume in volumes:
+                    print(volume)
+                    serializer = self.get_serializer(data=volume)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
 
         except Exception as e:
             return Response(e, status=status.HTTP_404_NOT_FOUND)
