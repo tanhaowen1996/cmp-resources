@@ -1,10 +1,11 @@
 from requests import exceptions
-from cloud_resources.settings import ONEFS_URL, NFS_ROOT, VSPHERE
+from cloud_resources.settings import ONEFS_URL, NFS_ROOT, VSPHERE, CLOUD_PATH
 from .session import OneFSMixin
 from urllib3.exceptions import InsecureRequestWarning
 from pyVim import connect
 from pyVmomi import vim, vmodl
 from pyVim.task import WaitForTask
+import yaml
 import requests
 import json
 import urllib3
@@ -222,6 +223,29 @@ def get_servers(host, user, pwd, port):
         print("Caught vmodl fault : " + error.msg)
 
 
+def get_os_server(os_conn, server_id):
+    return os_conn.get_server(server_id)
+
+
+def show_volume(volume, os_conn):
+
+    os_server = get_os_server(os_conn=os_conn, server_id=volume.attachments[0].get('server_id'))
+    Volume = {
+        'uuid': volume.id,
+        'status': volume.status,
+        'size': volume.size,
+        'create_time': volume.created_at,
+        'name': volume.name if volume.name else 'volume-'+volume.id,
+        'user_id': volume.user_id,
+        'is_bootable': volume.is_bootable,
+        'attachments': volume.attachments[0] if volume.attachments else '',
+        'host': volume.host,
+        'region': volume.location.region_name,
+        'server_ip': os_server.access_ipv4 if volume.attachments else '',
+    }
+    return Volume
+
+
 def get_vsphere():
     vsphere_list = []
     for vsphere in json.loads(VSPHERE):
@@ -233,3 +257,16 @@ def get_vsphere():
         }
         vsphere_list.append(vSphere)
     return vsphere_list
+
+
+def get_volumes(os_conn):
+    volumes = []
+    for volume in os_conn.list_volumes():
+        volumes.append(show_volume(volume=volume, os_conn=os_conn))
+    return volumes
+
+
+def get_clouds():
+    path = CLOUD_PATH
+    with open(path, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f).get('clouds')
