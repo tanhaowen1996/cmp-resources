@@ -1,7 +1,7 @@
 from django_filters import (
     FilterSet,
     CharFilter)
-from .models import Nfs, VServer
+from .models import Nfs, VServer, Volume
 
 
 class NfsFilter(FilterSet):
@@ -39,3 +39,26 @@ class VServerFilter(FilterSet):
                   'ipAddress',
                   'managedBy',
                   'location')
+
+
+class VolumeFilter(FilterSet):
+    id = CharFilter(field_name='id', lookup_expr='icontains')
+    name = CharFilter(field_name='name', lookup_expr='icontains')
+    uuid = CharFilter(field_name='uuid', lookup_expr='icontains')
+    status = CharFilter(field_name='status', lookup_expr='icontains')
+    host = CharFilter(field_name='host', lookup_expr='icontains')
+    user_id = CharFilter(field_name='user_id', lookup_expr='icontains')
+    region = CharFilter(field_name='region', lookup_expr='icontains')
+    server_ip = CharFilter(field_name='server_ip', lookup_expr='icontains')
+    volume_type = CharFilter(field_name='volume_type', lookup_expr='icontains')
+
+    class Meta:
+        mode = Volume
+        filter = ('name', 'id',
+                  'uuid',
+                  'status',
+                  'host',
+                  'user_id'
+                  'region',
+                  'server_ip',
+                  'volume_type')
