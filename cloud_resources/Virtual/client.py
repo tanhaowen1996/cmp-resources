@@ -224,7 +224,7 @@ def get_servers(host, user, pwd, port):
 
 
 def get_os_server(os_conn, server_id):
-    return os_conn.get_server(name_or_id=server_id, all_projects=True)
+    return os_conn.get_server_by_id(server_id)
 
 
 def show_volume(volume, os_conn):
