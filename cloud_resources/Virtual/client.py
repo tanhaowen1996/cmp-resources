@@ -237,6 +237,7 @@ def show_volume(volume, os_conn):
         'size': volume.size,
         'create_time': volume.created_at,
         'name': volume.name if volume.name else 'volume-'+volume.id,
+        'volume_type': volume.volume_type,
         'user_id': volume.user_id,
         'is_bootable': volume.is_bootable,
         'attachments': volume.attachments[0] if volume.attachments else '',
