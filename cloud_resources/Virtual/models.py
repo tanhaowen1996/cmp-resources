@@ -205,7 +205,7 @@ class Volume(models.Model):
         null=True,
         blank=True
     )
-    creats_time = models.DateTimeField(
+    create_time = models.DateTimeField(
         null=True,
         blank=True
     )
