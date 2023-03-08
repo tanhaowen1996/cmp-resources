@@ -191,7 +191,7 @@ class Volume(models.Model):
         editable=False
     )
     uuid = models.CharField(
-        max_length=32,
+        max_length=64,
         verbose_name=_('volume id'),
         null=True,
         blank=True
