@@ -170,7 +170,8 @@ SYNC_URL = os.getenv('SYNC_URL', '10.209.0.170:8880')
 SWAGGER = bool(int(os.getenv('SWAGGER', 1)))
 SYNC_HOST_TIME = os.getenv('SYNC_HOST_TIME', '23:30:00')
 SYNC_VSERVER_TIME = os.getenv('SYNC_VSERVER_TIME', '23:59:00')
-
+SYNC_NFS_TIME = os.getenv('SYNC_NFS_TIME', '23:00:00')
+SYNC_VOLUME_TIME = os.getenv('SYNC_VOLUME_TIME', '00:30:00')
 # if SWAGGER:
 #     SWAGGER_SETTINGS = {
 #         'LOGOUT_URL': '/admin/login/',
