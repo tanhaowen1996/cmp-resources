@@ -22,23 +22,31 @@ def get_nfs():
 class Nfs(models.Model):
     id = models.CharField(
         primary_key=True,
-        max_length=16,
+        max_length=64,
         verbose_name=_('nfs id')
     )
     name = models.CharField(
-        max_length=32
+        max_length=64,
+        null=True,
+        blank=True
     )
     path = models.CharField(
-        max_length=128
+        max_length=128,
+        null=True,
+        blank=True
     )
     status = models.CharField(
-        max_length=8
+        max_length=8,
+        null=True,
+        blank=True
     )
     quota = models.BigIntegerField(
-        null=True
+        null=True,
+        blank=True
     )
     used = models.BigIntegerField(
-        null=True
+        null=True,
+        blank=True
     )
 
     updated_at = models.DateTimeField(
