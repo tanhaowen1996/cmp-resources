@@ -45,17 +45,22 @@ def get_quotas(path):
     url = ONEFS_URL + "platform/1/quota/quotas?path=" + path
     try:
         response = requests.get(url=url, auth=nfs_conn, verify=False)
+        if not response.json().get("quotas"):
+            usage = {
+                "hard": 0,
+                "used": 0
+            }
+            return usage
         quota = response.json().get("quotas")[0]
         usage = {
             "hard": quota.get("thresholds").get("hard"),
             "used": quota.get("usage").get("logical")
         }
+        return usage
     except exceptions.Timeout as e:
         print(e)
     except exceptions.HTTPError as e:
         print(e)
-    else:
-        return usage
 
 
 def search_for_obj(content, vim_type, name, folder=None, recurse=True):
@@ -129,7 +134,7 @@ def _split_vm_name_uuid(vm_dir_name):
     try:
         return vm_dir_name[:-39], vm_dir_name[-37:-1]
         # arr = vm_dir_name.split('(')
-        # if len(arr) == 3:
+        # if len(arr) == 3
         #     return arr[0].strip() + '(' + arr[1].strip(), arr[2].strip().split(')')[0]
         # return arr[0].strip(), arr[1].split(')')[0]
     except Exception as e:
