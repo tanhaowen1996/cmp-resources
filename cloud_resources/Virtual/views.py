@@ -38,7 +38,7 @@ class NfsViewSet(viewsets.ModelViewSet):
         return NfsSerializer
 
     @action(detail=False, methods=['get'])
-    def sync_nfs(self, request, *args, **kwargs):
+    def sync_all(self, request, *args, **kwargs):
         try:
             nfs_id, nfs_list = get_nfs()
             for db_nfs in Nfs.objects.all():
