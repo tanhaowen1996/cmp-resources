@@ -211,6 +211,9 @@ def get_servers(host, user, pwd, port):
             project_id = _split_project_id(prject_folder.name)
             os_vms_folder = get_obj(content, [vim.Folder], "Instances", prject_folder)
             os_volume_folder = get_obj(content, [vim.Folder], "Volumes", prject_folder)
+            for volume_folder in os_volume_folder.childEntity:
+                os_snapsshot_folder = get_obj(content, [vim.Folder], "Snapshots", volume_folder)
+                osvm.extend(os_snapsshot_folder.childEntity)
             osvm.extend(os_vms_folder.childEntity)
             osvm.extend(os_volume_folder.childEntity)
             for vm in os_vms_folder.childEntity:
