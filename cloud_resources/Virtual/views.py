@@ -140,7 +140,7 @@ class VolumeViewSet(viewsets.ModelViewSet):
     """
     filterset_class = VolumeFilter
     serializer_class = VolumeSerializer
-    queryset = VServer.objects.all().order_by('-created_at')
+    queryset = Volume.objects.all().order_by('-created_at')
 
     def get_serializer_class(self):
         return VolumeSerializer
