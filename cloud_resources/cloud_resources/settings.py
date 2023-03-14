@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -27,11 +26,9 @@ SECRET_KEY = 'django-insecure-j(6isa((3ez0gmwkv@n9)h6n_#k&_6%%t#fgsy(%2p-83b(b3h
 # DEBUG = True
 DEBUG = bool(int(os.getenv('DEBUG', 1)))
 
-
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['*']
 APPEND_SLASH = False
-
 
 # Application definition
 
@@ -52,6 +49,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DATE_FORMAT': '%Y-%m-%d',
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+    'DEFAULT_PAGINATION_CLASS': 'cloud_resources.pagination.PageNumberPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [],
     'UNAUTHENTICATED_USER': None,
@@ -91,7 +89,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cloud_resources.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -125,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -143,7 +139,6 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 
 DATE_FORMAT = 'Y-m-d'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -155,7 +150,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 ONEFS_URL = os.getenv('ONEFS_URL', 'https://10.1.51.203:8080/')
 ONEFS_USER = os.getenv('ONEFS_USER', 'admin')
@@ -172,29 +166,3 @@ SYNC_HOST_TIME = os.getenv('SYNC_HOST_TIME', '23:30:00')
 SYNC_VSERVER_TIME = os.getenv('SYNC_VSERVER_TIME', '23:59:00')
 SYNC_NFS_TIME = os.getenv('SYNC_NFS_TIME', '23:00:00')
 SYNC_VOLUME_TIME = os.getenv('SYNC_VOLUME_TIME', '00:30:00')
-# if SWAGGER:
-#     SWAGGER_SETTINGS = {
-#         'LOGOUT_URL': '/admin/login/',
-#         'SECURITY_DEFINITIONS': {
-#             OS_TOKEN_KEY: {
-#                 'type': 'apiKey',
-#                 'name': OS_TOKEN_KEY.lower(),
-#                 'in': 'header'
-#             },
-#             IS_PLATFORM: {
-#                 'type': 'apiKey',
-#                 'name': IS_PLATFORM.lower(),
-#                 'in': 'header'
-#             },
-#             PROJECTID: {
-#                 'type': 'apiKey',
-#                 'name': PROJECTID.lower(),
-#                 'in': 'header'
-#             },
-#             REGION: {
-#                 'type': 'apiKey',
-#                 'name': REGION.lower(),
-#                 'in': 'header'
-#             }
-#         },
-#     }
