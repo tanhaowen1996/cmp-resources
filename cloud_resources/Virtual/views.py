@@ -138,8 +138,8 @@ class VolumeViewSet(viewsets.ModelViewSet):
         destroy:
         drop Volume
     """
-    filterset_class = VServerFilter
-    serializer_class = VolumeFilter
+    filterset_class = VolumeFilter
+    serializer_class = VolumeSerializer
     queryset = VServer.objects.all().order_by('-created_at')
 
     def get_serializer_class(self):
