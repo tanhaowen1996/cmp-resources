@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import HostSerializer
@@ -30,6 +31,10 @@ class HostViewSet(viewsets.ModelViewSet):
     filterset_class = HostFilter
     serializer_class = HostSerializer
     queryset = Host.objects.all().order_by('-created_at')
+    filter_backends = [DjangoFilterBackend]
+
+    def get_serializer_class(self):
+        return HostSerializer
 
     @action(detail=False, methods=['get'])
     def sync_all(self, request, *args, **kwargs):
