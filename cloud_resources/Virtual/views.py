@@ -1,4 +1,5 @@
 from rest_framework import viewsets, status
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializers import NfsSerializer, VServerSerializer, VolumeSerializer
@@ -33,6 +34,7 @@ class NfsViewSet(viewsets.ModelViewSet):
     filterset_class = NfsFilter
     serializer_class = NfsSerializer
     queryset = Nfs.objects.all().order_by('-created_at')
+    filter_backends = [DjangoFilterBackend]
 
     def get_serializer_class(self):
         return NfsSerializer
@@ -75,6 +77,7 @@ class VServerViewSet(viewsets.ModelViewSet):
     filterset_class = VServerFilter
     serializer_class = VServerSerializer
     queryset = VServer.objects.all().order_by('-created_at')
+    filter_backends = [DjangoFilterBackend]
 
     def get_serializer_class(self):
         return VServerSerializer
@@ -141,6 +144,7 @@ class VolumeViewSet(viewsets.ModelViewSet):
     filterset_class = VolumeFilter
     serializer_class = VolumeSerializer
     queryset = Volume.objects.all().order_by('-created_at')
+    filter_backends = [DjangoFilterBackend]
 
     def get_serializer_class(self):
         return VolumeSerializer
